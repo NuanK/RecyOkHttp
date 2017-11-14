@@ -1,5 +1,6 @@
 package com.bwie.test.recyokhttp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,6 +13,7 @@ import com.bwie.test.recyokhttp.adapter.MusicAdapter;
 import com.bwie.test.recyokhttp.bean.MusicBean;
 import com.bwie.test.recyokhttp.presenter.MusicPresenter;
 import com.bwie.test.recyokhttp.view.IMainActivity;
+import com.bwie.test.recyokhttp.view.CarActivity;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.List;
@@ -26,6 +28,7 @@ public class MainActivity extends AppCompatActivity implements IMainActivity{
     private TextView mTvContent;
     private RecyclerView mRv;
     private LinearLayout mActivityMain;
+    private MusicAdapter adapter;
 
 
     @Override
@@ -37,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements IMainActivity{
         //一进页面就请求数据
         musicPresenter.getMusic(offset + "");
         mRv.setLayoutManager(new LinearLayoutManager(this));
+
 
     }
 
@@ -60,5 +64,13 @@ public class MainActivity extends AppCompatActivity implements IMainActivity{
     public void showRv(List<MusicBean.SongListBean> list) {
         MusicAdapter adapter=new MusicAdapter(this,list);
         mRv.setAdapter(adapter);
+        //RecyclerView的点击事件
+        adapter.setOnItemClickListener(new MusicAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(MusicBean.SongListBean songListBean) {
+                Intent intent=new Intent(MainActivity.this, CarActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 }

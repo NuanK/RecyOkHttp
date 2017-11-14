@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bwie.test.recyokhttp.R;
@@ -21,6 +22,19 @@ import java.util.List;
 public class MusicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context context;
     private List<MusicBean.SongListBean>list;
+    //2、定义一个属性
+    private OnItemClickListener onItemClickListener;
+
+    //1、接口回调第一步，先定义一个接口
+    public interface OnItemClickListener{
+        public void onItemClick(MusicBean.SongListBean songListBean);
+
+    }
+
+    //3、定义一个方法
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
+    }
 
     public MusicAdapter(Context context, List<MusicBean.SongListBean> list) {
         this.context = context;
@@ -36,11 +50,19 @@ public class MusicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        MusicBean.SongListBean songListBean = list.get(position);
+        final MusicBean.SongListBean songListBean = list.get(position);
         MyViewHolder myViewHolder=(MyViewHolder)holder;
         ImageLoader.getInstance().displayImage(songListBean.getPic_big(), myViewHolder.rv_img);
         myViewHolder.tv_time.setText(songListBean.getTitle());
         myViewHolder.tv_content.setText(songListBean.getAuthor());
+
+        //给布局设置一个点击和长按时间
+        myViewHolder.ll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onItemClickListener.onItemClick(songListBean);
+            }
+        });
     }
 
     @Override
@@ -53,6 +75,7 @@ public class MusicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         private ImageView rv_img;
         private TextView tv_time;
         private TextView tv_content;
+        private LinearLayout ll;
 
 
         public MyViewHolder(View itemView) {
@@ -60,6 +83,7 @@ public class MusicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             rv_img = itemView.findViewById(R.id.rv_img);
             tv_time = itemView.findViewById(R.id.rv_time);
             tv_content = itemView.findViewById(R.id.rv_content);
+            ll=itemView.findViewById(R.id.ll);
         }
     }
 
